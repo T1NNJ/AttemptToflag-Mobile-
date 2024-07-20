@@ -39,7 +39,7 @@ spawn(function()
 end)
 
 
-local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/T1NNJ/Attemptofflag/main/GUI", true))()
+local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/T1NNJ/AttemptToflag-Mobile-/main/GUI", true))()
 local Table = {}
 
 local window = Lib:CreateWindow("Chaos V7.6.2 (MOB)")
