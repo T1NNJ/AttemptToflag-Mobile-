@@ -131,6 +131,35 @@ while true do
 end
 end)
 
+window:Dropdown("Auto Select:",{location = Table,flag = "weapon",search = false --[[AddsSearchBar]], list = {"Mace","Chainsaw","Knife","Pan","Pencil","Baseball Bat","Scythe", "Emerald Greatsword","Blood Dagger","Frost Spear"}--[[Wont work when PlayerList = true]], PlayerList = false --[[ Turns the list into the players in the server ]]},function()
+local Mouse = game.Players.LocalPlayer:GetMouse()
+game:GetService("UserInputService").InputBegan:Connect(function(Input, IsTyping)
+if IsTyping then return end
+if Input.KeyCode == Enum.KeyCode.KeypadSeven then
+while true do wait()
+local Player = game:GetService("Players").LocalPlayer
+local Mouse = Player:GetMouse()
+
+
+	game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").Enabled = false
+    Player.PlayerGui["Menu Screen"].RemoteEvent:FireServer(Table["weapon"])
+wait(1) end
+end
+end)
+end)
+
+window:Toggle("Auto Select Tool",{location = Table, flag = "weaponzz"},function() 
+wait(.5)  
+game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadSeven, false, game)
+game.StarterGui:SetCore("SendNotification", {
+    Title = "Current:";
+    Text = (Table["weapon"]),
+    Icon = "http://www.roblox.com/asset/?id=5585095509"; 
+    Duration = 5; 
+    callback = bindableFunction;
+})
+end)
+
 window:Button("Set Night",function()
 game.Lighting:SetMinutesAfterMidnight(155)
     end)
