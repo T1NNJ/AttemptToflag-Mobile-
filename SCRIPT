@@ -42,7 +42,7 @@ end)
 local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/T1NNJ/AttemptToflag-Mobile-/main/GUI", true))()
 local Table = {}
 
-local window = Lib:CreateWindow("Chaos V7.6.2 (MOB)")
+local window = Lib:CreateWindow("Chaos V4.2.6 (MOB)")
 
 window:Section(" Main Functions")
 
@@ -148,9 +148,9 @@ end
 end)
 end)
 
-window:Toggle("Auto Select Tool",{location = Table, flag = "weaponzz"},function() 
-wait(.5)  
-game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadSeven, false, game)
+local Pressing = false
+window:Toggle("Auto Select Tool",{location = Table, flag = "enable"},function()
+local stopFlag = false
 game.StarterGui:SetCore("SendNotification", {
     Title = "Current:";
     Text = (Table["weapon"]),
@@ -158,6 +158,25 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 5; 
     callback = bindableFunction;
 })
+local function pressKey()
+wait(.5)  
+game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadSeven, false, game)
+end
+
+if Pressing then
+    Pressing = false
+    stopFlag = true
+else
+    Pressing = true
+    stopFlag = false
+    spawn(function()
+        repeat
+            pressKey()
+            wait(1)
+            game:GetService("RunService").Heartbeat:Wait()
+        until stopFlag or not Pressing
+    end)
+end
 end)
 
 window:Button("Set Night",function()
