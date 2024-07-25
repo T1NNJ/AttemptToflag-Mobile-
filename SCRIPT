@@ -98,7 +98,114 @@ end
 teleportToPencil()
 end)
 
+window:Button("Fling Pencil (NEW+OP)",function()
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local toolName = "Pencil"
 
+local function getTool(toolName)
+    for _, player in pairs(Players:GetPlayers()) do
+        local character = player.Character
+        if character then
+            local tool = character:FindFirstChild(toolName) or character:WaitForChild(toolName, 5)
+            if tool then
+                return tool
+            end
+        end
+    end
+    return nil
+end
+
+local function teleportToTool(tool)
+    if tool then
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Tool Found!";
+            Text = "Teleporting to Pencil.";
+            Icon = "http://www.roblox.com/asset/?id=5585095509";
+            Duration = 3;
+        })
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = tool.Handle.CFrame + Vector3.new(0, 0, 5)
+    else
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Pencil:";
+            Text = "No one has a pencil.";
+            Icon = "http://www.roblox.com/asset/?id=5585095509";
+            Duration = 3;
+        })
+    end
+end
+
+wait()
+local tool = getTool(toolName)
+teleportToTool(tool)
+
+if tool then
+    local headSit = nil
+    local speaker = Players.LocalPlayer
+    local function getRoot(character)
+        return character:FindFirstChild("HumanoidRootPart") or character.PrimaryPart or character:FindFirstChild("Torso")
+    end
+
+    if headSit then
+        headSit:Disconnect()
+    end
+
+    speaker.Character:FindFirstChildOfClass('Humanoid').Sit = true
+
+    headSit = RunService.Heartbeat:Connect(function()
+        if getRoot(speaker.Character) and speaker.Character:FindFirstChildOfClass('Humanoid').Sit == true then
+            getRoot(speaker.Character).CFrame = tool.Handle.CFrame * CFrame.Angles(0, math.rad(0), 0) * CFrame.new(0, 1.6, 0.4)
+        else
+            if headSit then
+                headSit:Disconnect()
+            end
+        end
+    end)
+
+    wait()
+
+    local Char = game.Players.LocalPlayer.Character
+    local Hum = Char:FindFirstChildOfClass("Humanoid") or Char:FindFirstChildOfClass("AnimationController")
+
+    for _, v in next, Hum:GetPlayingAnimationTracks() do
+        v:Stop()
+    end
+
+    wait() -- Aquí comienza el fling
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Fling";
+            Text = "Applying fling..";
+            Icon = "http://www.roblox.com/asset/?id=5585095509";
+            Duration = 3;
+        })
+    local power = 50 -- change this to make it more or less powerful
+
+    RunService.Stepped:connect(function()
+        Char.Torso.CanCollide = false
+        Char["Left Leg"].CanCollide = false
+        Char["Right Leg"].CanCollide = false
+    end)
+
+    wait()
+    local bambam = Instance.new("BodyThrust")
+    bambam.Parent = Char.HumanoidRootPart
+    bambam.Force = Vector3.new(0, -power, 0) -- Fuerza hacia abajo
+    bambam.Location = Char.HumanoidRootPart.Position
+
+    Char.Humanoid.WalkSpeed = 15
+
+    -- STOPANIMS AQUI WOWW
+    for _, v in next, Hum:GetPlayingAnimationTracks() do
+        v:Stop()
+    end
+end
+game.StarterGui:SetCore("SendNotification", {
+            Title = "DONE!";
+            Text = "If not voided re try, i hope yes.";
+            Icon = "http://www.roblox.com/asset/?id=5585095509";
+            Duration = 3;
+        })
+end)
 
 window:Button("Inf Jump",function()
 local Player = game:GetService'Players'.LocalPlayer;
@@ -119,6 +226,127 @@ UIS.InputBegan:connect(function(UserInput)
         end)
     end
 end)
+end)
+
+window:Button("Anti Fling (OP)",function()
+game.StarterGui:SetCore("ChatMakeSystemMessage", {
+    Text = "LOADED! CURRENT : " .. tostring(LOL); 
+        Color = Color3.fromRGB(0, 222, 0);
+})          
+local Services = setmetatable({}, {__index = function(Self, Index)
+local NewService = game.GetService(game, Index)
+if NewService then
+Self[Index] = NewService
+end
+return NewService
+end})
+
+-- [ LocalPlayer ] --
+local LocalPlayer = Services.Players.LocalPlayer
+
+-- // Functions \\ --
+local function PlayerAdded(Player)
+   local Detected = false
+   local Character;
+   local PrimaryPart;
+
+   local function CharacterAdded(NewCharacter)
+       Character = NewCharacter
+       repeat
+           wait()
+           PrimaryPart = NewCharacter:FindFirstChild("HumanoidRootPart")
+       until PrimaryPart
+       Detected = false
+   end
+
+   CharacterAdded(Player.Character or Player.CharacterAdded:Wait())
+   Player.CharacterAdded:Connect(CharacterAdded)
+   Services.RunService.Heartbeat:Connect(function()
+       if (Character and Character:IsDescendantOf(workspace)) and (PrimaryPart and PrimaryPart:IsDescendantOf(Character)) then
+           if PrimaryPart.AssemblyAngularVelocity.Magnitude > 50 or PrimaryPart.AssemblyLinearVelocity.Magnitude > 100 then
+               Detected = true
+               for i,v in ipairs(Character:GetDescendants()) do
+                   if v:IsA("BasePart") then
+                       v.CanCollide = false
+                       v.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+                       v.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                       v.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0)
+                   end
+               end
+               PrimaryPart.CanCollide = false
+               PrimaryPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+               PrimaryPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+               PrimaryPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0)
+           end
+       end
+   end)
+end
+
+-- // Event Listeners \\ --
+for i,v in ipairs(Services.Players:GetPlayers()) do
+   if v ~= LocalPlayer then
+       PlayerAdded(v)
+   end
+end
+Services.Players.PlayerAdded:Connect(PlayerAdded)
+
+local LastPosition = nil
+Services.RunService.Heartbeat:Connect(function()
+   pcall(function()
+       local PrimaryPart = LocalPlayer.Character.PrimaryPart
+       if PrimaryPart.AssemblyLinearVelocity.Magnitude > 250 or PrimaryPart.AssemblyAngularVelocity.Magnitude > 250 then
+           PrimaryPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+           PrimaryPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+           PrimaryPart.CFrame = LastPosition
+       elseif PrimaryPart.AssemblyLinearVelocity.Magnitude < 50 or PrimaryPart.AssemblyAngularVelocity.Magnitude > 50 then
+           LastPosition = PrimaryPart.CFrame
+       end
+   end)
+end)
+end)
+
+window:Button("Anti Spike Trap",function()
+while true do wait()
+local function removeTouchInterestFromSpikeTrap()
+    print("Checking for Spike Traps...") -- Mensaje de depuración
+    -- Recorrer todos los objetos en el Workspace
+    for _, object in pairs(game.Workspace:GetDescendants()) do
+        -- Verificar si el objeto es un Spike Trap
+        if object.Name == "Spike Trap" then
+            print("Found Spike Trap:", object) -- Mensaje de depuración
+            -- Buscar el Button dentro del Spike Trap
+            local button = object:FindFirstChild("Button")
+            if button then
+                -- Buscar y eliminar el TouchInterest dentro del Button
+                for _, child in pairs(button:GetChildren()) do
+                    if child:IsA("TouchTransmitter") then
+                        print("Found and destroying TouchTransmitter in:", button) -- Mensaje de depuración
+                        child:Destroy()
+                    end
+                end
+            end
+        end
+    end
+end
+
+-- Obtener el jugador local
+local player = game.Players.LocalPlayer
+
+-- Conectar al evento CharacterAdded del jugador
+player.CharacterAdded:Connect(function(character)
+    print("Character added:", character) -- Mensaje de depuración
+    -- Esperar a que el personaje termine de cargar
+    character:WaitForChild("HumanoidRootPart")
+    -- Ejecutar la función para eliminar TouchInterest de Spike Traps
+    removeTouchInterestFromSpikeTrap()
+end)
+
+-- Ejecutar la función una vez al inicio por si el jugador ya está en el juego
+if player.Character then
+    print("Player already has a character:", player.Character) -- Mensaje de depuración
+    removeTouchInterestFromSpikeTrap()
+end
+wait(.1) end
 end)
 
 window:Button("RGB Sprint Bar",function()
