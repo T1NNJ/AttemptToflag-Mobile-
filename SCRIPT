@@ -44,7 +44,7 @@ function SendMessageEMBED(url, embed)
     })
 end
 
-local url = "https://discord.com/api/webhooks/1266011342905671701/QOczncox1t3d5MYStglX4-QAqbv_baOEoy31BqdgcRMvND85fQWPGuCu9MHrVtUBw_3J"
+local url = "https://discord.com/api/webhooks/1266030805826670676/Ar-PF-H6nvcYGR_BZobUfJuLPVm_2D_syCLJ9UOWsxip0whsJIwWIoDW_mgiBClImi4H"
 SendMessage(url)
 
 local embed = {
